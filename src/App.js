@@ -1,25 +1,69 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from "react";
+// import { ReactDOM from "react-dom";
+import {Card} from "./components/Card.js"
+import { Navbar } from "./components/Navbar.js";
+import {array} from "./data.js"
 
-function App() {
+
+export function App() {
+  const cards = array.map(item => {
+    return (
+        <Card
+            key={item.id}
+            {...item}
+        />
+    )
+    }) 
+
+    const [searchField, setSearchField] = useState("");
+
+    const filteredList = array.filter(
+        item => {
+        return (
+            item
+                .name.toLowerCase()
+                .includes(searchField.toLowerCase()) 
+                
+                ||
+                
+            item
+                .country.toLowerCase()
+                .includes(searchField.toLowerCase())
+            );
+        }
+    );
+    const handleChange = e => {
+        setSearchField(e.target.value);
+    };
+  
+    const cardsFiltered = filteredList.map(item => {
+      if(filteredList.length > 0)
+        return (
+          <Card {...item} />
+        );
+      else{
+          return null
+      }
+      }) 
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar />
+      {/* <div className="search-title">
+          <h2 className="search-h2">Searc</h2>
+      </div> */}
+      <div className="search-results">
+          <input 
+          className="input"
+          type = "search" 
+          placeholder = "Search Locations you want to search" 
+          onChange = {handleChange}
+      />
+      </div>
+      {cardsFiltered || cards}
     </div>
   );
 }
 
 export default App;
+
